@@ -29,9 +29,53 @@ Copy these files to `.env` in their respective directories and fill in the neces
 
 The `railway.json` file in the root directory contains configuration for deploying this project to [Railway](https://railway.app/). It specifies build commands and deployment settings.
 
-## Getting Started
+## Running the Application
 
-(To be added: Instructions for local development setup, running the frontend, running the backend, etc.)
+To run the application, you'll need to start both the backend and frontend servers separately.
+
+### Backend (Node.js + Express)
+
+1.  **Navigate to the backend directory:**
+    ```bash
+    cd backend
+    ```
+2.  **Install dependencies:**
+    ```bash
+    npm install
+    ```
+3.  **Create a `.env` file from the example:**
+    Copy `backend/.env.example` to `backend/.env`. You can modify the `PORT` if needed.
+    ```bash
+    cp .env.example .env
+    ```
+4.  **Start the backend server:**
+    ```bash
+    npm start
+    ```
+    The backend should now be running, typically on `http://localhost:3001` (or the port specified in your `.env` file). You can check its status by visiting `http://localhost:3001/api/health` in your browser or using a tool like curl.
+
+### Frontend (Vite + React)
+
+1.  **Navigate to the frontend directory:**
+    ```bash
+    cd frontend
+    ```
+2.  **Install dependencies:**
+    ```bash
+    npm install
+    ```
+3.  **Create a `.env` file from the example:**
+    Copy `frontend/.env.example` to `frontend/.env`.
+    The `VITE_API_BASE_URL` in `frontend/.env.example` is set to `http://localhost:3000`. For development, if you want to rely *solely* on Vite's proxy (configured in `vite.config.js` for `/api` routes), you should ensure that your `App.jsx` makes requests to relative paths like `/api/health`. If `App.jsx` constructs full URLs using `VITE_API_BASE_URL`, then this variable should be set to the backend's address (e.g., `http://localhost:3001`). The current `App.jsx` uses `import.meta.env.VITE_API_BASE_URL || 'http://localhost:3001'`, so ensure your `.env` file reflects the correct backend URL.
+    ```bash
+    cp .env.example .env
+    ```
+    *Note: The `frontend/App.jsx` is currently configured to use `VITE_API_BASE_URL` (defaulting to `http://localhost:3001` if not set). The Vite proxy in `vite.config.js` is set up for requests to `/api`. If `VITE_API_BASE_URL` is set to `http://localhost:3001`, then requests like `fetch(\`\${apiUrl}/api/health\`)` will target `http://localhost:3001/api/health` directly, bypassing the Vite proxy. If you intend to use the Vite proxy, ensure `VITE_API_BASE_URL` is an empty string or `/` and that fetch requests in `App.jsx` are made to relative paths like `/api/health`.*
+4.  **Start the frontend development server:**
+    ```bash
+    npm run dev
+    ```
+    The frontend should now be running, typically on `http://localhost:5173` (Vite will indicate the port). Open this URL in your browser, and it should display a message fetched from the backend.
 
 ## Contributing
 
